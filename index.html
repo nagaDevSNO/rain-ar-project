@@ -35,14 +35,18 @@
         particle-system="preset: rain; color: white; size: 2; particleCount: 2000">
       </a-entity>
 
-      <!-- Ground (for better visibility) -->
-      <!-- <a-plane 
-        position="0 0 0" 
-        rotation="-90 0 0" 
-        width="3" 
-        height="3" 
-        color="#444">
-      </a-plane> -->
+      <!-- Video Asset -->
+      <a-assets>
+        <video id="rainVideo" src="rain.mp4" preload="auto" loop="true" webkit-playsinline playsinline></video>
+      </a-assets>
+
+      <!-- Rain Video -->
+      <a-video 
+        src="#rainVideo"
+        width="2"
+        height="1.2"
+        position="0 1 0">
+      </a-video>
 
       <!-- Sound -->
       <a-entity id="rainSound"
@@ -69,17 +73,24 @@
   window.addEventListener('DOMContentLoaded', () => {
     const marker = document.querySelector('#marker');
     const sound = document.querySelector('#rainSound');
+    const video = document.querySelector('#rainVideo');
 
-    if (marker && sound) {
+    if (marker) {
       marker.addEventListener('markerFound', () => {
-        if (sound.components.sound && !sound.components.sound.isPlaying) {
+        if (sound && sound.components.sound && !sound.components.sound.isPlaying) {
           sound.components.sound.playSound();
+        }
+        if (video) {
+          video.play();
         }
       });
 
       marker.addEventListener('markerLost', () => {
-        if (sound.components.sound && sound.components.sound.isPlaying) {
+        if (sound && sound.components.sound && sound.components.sound.isPlaying) {
           sound.components.sound.stopSound();
+        }
+        if (video) {
+          video.pause();
         }
       });
     }
