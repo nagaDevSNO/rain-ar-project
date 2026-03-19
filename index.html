@@ -2,51 +2,74 @@
 <html>
 <head>
   <title>Rain AR</title>
+
+  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+  <!-- AR.js -->
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+
+  <!-- Particle System (IMPORTANT) -->
   <script src="https://cdn.jsdelivr.net/npm/aframe-particle-system-component@1.1.3/dist/aframe-particle-system-component.min.js"></script>
 </head>
 
-<body style="margin: 0; overflow: hidden;">
+<body onclick="playSound()" style="margin: 0; overflow: hidden;">
 
-  <div style="position:absolute; top:10px; left:10px; background:white; padding:10px;">
+  <!-- UI Controls -->
+  <div style="position:absolute; top:10px; left:10px; background:white; padding:10px; z-index:10;">
     <label>Volume</label>
-    <input type="range" min="0" max="1" step="0.1" onchange="setVolume(this.value)">
+    <input type="range" min="0" max="1" step="0.1" value="0.5" onchange="setVolume(this.value)">
   </div>
 
+  <!-- AR Scene -->
   <a-scene embedded arjs>
 
-    <!-- Use ONE of these -->
-
-    <!-- OPTION 1: Hiro Marker -->
+    <!-- Marker -->
     <a-marker preset="hiro">
 
-    <!-- OPTION 2: Custom Marker -->
-    <!-- <a-marker type="pattern" url="marker.patt"> -->
-
+      <!-- Rain Effect -->
       <a-entity 
-        particle-system="preset: rain; color: #AAAAFF; particleCount: 500">
+        position="0 2 0"
+        particle-system="preset: rain; color: white; size: 2; particleCount: 2000">
       </a-entity>
 
+      <!-- Ground (for better visibility) -->
+      <a-plane 
+        position="0 0 0" 
+        rotation="-90 0 0" 
+        width="3" 
+        height="3" 
+        color="#444">
+      </a-plane>
+
+      <!-- Sound -->
       <a-entity id="rainSound"
-        sound="src: url(rain.mp3); autoplay: true; loop: true">
+        sound="src: url(rain.mp3); autoplay: false; loop: true; volume: 0.5">
       </a-entity>
-      <!-- <a-box color="red" position="0 0.5 0"></a-box> -->
 
     </a-marker>
 
-    
-
+    <!-- Camera -->
     <a-entity camera></a-entity>
 
   </a-scene>
 
-<script>
-function setVolume(value) {
-  const sound = document.querySelector('#rainSound');
-  sound.components.sound.setVolume(value);
-}
-</script>
+  <!-- Script -->
+  <script>
+    function setVolume(value) {
+      const sound = document.querySelector('#rainSound');
+      if (sound && sound.components.sound) {
+        sound.components.sound.setVolume(value);
+      }
+    }
+
+    function playSound() {
+      const sound = document.querySelector('#rainSound');
+      if (sound && sound.components.sound && !sound.components.sound.isPlaying) {
+        sound.components.sound.playSound();
+      }
+    }
+  </script>
 
 </body>
 </html>
