@@ -14,7 +14,7 @@
 
 </head>
 
-<body onclick="playSound()" ontouchstart="playSound()" style="margin: 0; overflow: hidden;">
+<body style="margin: 0; overflow: hidden;">
 
 
   <!-- UI Controls -->
@@ -27,7 +27,7 @@
   <a-scene embedded arjs>
 
     <!-- Marker -->
-    <a-marker preset="hiro">
+    <a-marker preset="hiro" id="marker">
 
       <!-- Rain Effect -->
       <a-entity 
@@ -66,17 +66,24 @@
     }
   }
 
-  function playSound() {
+  window.addEventListener('DOMContentLoaded', () => {
+    const marker = document.querySelector('#marker');
     const sound = document.querySelector('#rainSound');
 
-    if (sound && sound.components.sound) {
-      try {
-        sound.components.sound.playSound();
-      } catch (e) {
-        console.log("Sound blocked, retry after user interaction");
-      }
+    if (marker && sound) {
+      marker.addEventListener('markerFound', () => {
+        if (sound.components.sound && !sound.components.sound.isPlaying) {
+          sound.components.sound.playSound();
+        }
+      });
+
+      marker.addEventListener('markerLost', () => {
+        if (sound.components.sound && sound.components.sound.isPlaying) {
+          sound.components.sound.stopSound();
+        }
+      });
     }
-  }
+  });
   </script>
 
 </body>
