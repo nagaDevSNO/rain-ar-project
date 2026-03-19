@@ -31,8 +31,8 @@
 
       <!-- Rain Effect -->
       <a-entity 
-        position="0 2 0"
-        particle-system="preset: rain; color: white; size: 2; particleCount: 2000">
+        position="0 3 0"
+        particle-system="preset: rain; color: white; size: 3; particleCount: 4000; velocityValue: 0 -5 0; opacity: 0.8">
       </a-entity>
 
       <!-- Sound -->
@@ -51,9 +51,10 @@
 
   <script>
   function setVolume(value) {
-    const sound = document.querySelector('#rainSound');
-    if (sound && sound.components.sound) {
-      sound.components.sound.setVolume(value);
+    const soundEl = document.querySelector('#rainSound');
+
+    if (soundEl && soundEl.components.sound) {
+      soundEl.components.sound.setVolume(parseFloat(value));
     }
   }
 
